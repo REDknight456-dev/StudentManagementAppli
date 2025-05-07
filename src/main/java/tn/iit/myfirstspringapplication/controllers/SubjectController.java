@@ -25,11 +25,4 @@ public class SubjectController {
     public List<StudentSubject> getAllSubjects(){
         return studentSubjectService.getAllSubjects();
     }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Subject> updateSubject(@PathVariable Long id, @RequestBody Subject subject) {
-        Subject updated = subjectService.updateSubject(id, subject);
-        return ResponseEntity.ok(updated);
-    }
-
 }
