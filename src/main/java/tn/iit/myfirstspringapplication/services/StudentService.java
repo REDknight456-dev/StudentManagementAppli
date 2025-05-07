@@ -1,4 +1,6 @@
 package tn.iit.myfirstspringapplication.services;
+import java.util.List;
+
 
 import org.springframework.stereotype.Service;
 import tn.iit.myfirstspringapplication.DTO.StudentCreateDTO;
@@ -36,6 +38,9 @@ public class StudentService {
             throw new RuntimeException("Student with id " + id + " not found");
         }
     }
+    public List<Student> searchStudentsByName(String name) {
+        return studentRepository.findByNameContainingIgnoreCase(name);
+    }
 
     public Student updateStudent(Long id, StudentUpdateDTO studentDTO) {
         Student student = getStudentById(id);
@@ -43,4 +48,14 @@ public class StudentService {
         student.setAverage(studentDTO.getAverage());
         return studentRepository.save(student);
     }
+
+    public void deleteStudentById(Long id) {
+        Optional<Student> student = studentRepository.findById(id);
+        if (student.isPresent()) {
+            studentRepository.deleteById(id);
+        } else {
+            throw new RuntimeException("Student with id " + id + " not found");
+        }
+    }
+
 }
