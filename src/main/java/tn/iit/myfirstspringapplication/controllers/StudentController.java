@@ -6,6 +6,8 @@ import tn.iit.myfirstspringapplication.DTO.StudentUpdateDTO;
 import tn.iit.myfirstspringapplication.models.Student;
 import tn.iit.myfirstspringapplication.services.StudentService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/students")
 public class StudentController {
@@ -21,6 +23,11 @@ public class StudentController {
     public Student createStudent(@RequestBody StudentCreateDTO student){
         return studentService.createStudent(student);
     }
+    @GetMapping("/students/search")
+    public List<Student> searchStudents(@RequestParam String name) {
+        return studentService.searchStudentsByName(name);
+    }
+
 
     @PutMapping("{id}")
     public Student updateStudent(@PathVariable Long id, @RequestBody StudentUpdateDTO studentDTO){
