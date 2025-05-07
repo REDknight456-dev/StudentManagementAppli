@@ -43,4 +43,14 @@ public class StudentService {
         student.setAverage(studentDTO.getAverage());
         return studentRepository.save(student);
     }
+
+    public void deleteStudentById(Long id) {
+        Optional<Student> student = studentRepository.findById(id);
+        if (student.isPresent()) {
+            studentRepository.deleteById(id);
+        } else {
+            throw new RuntimeException("Student with id " + id + " not found");
+        }
+    }
+
 }
