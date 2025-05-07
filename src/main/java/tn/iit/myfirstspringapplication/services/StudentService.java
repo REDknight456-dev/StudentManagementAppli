@@ -43,4 +43,6 @@ public class StudentService {
         student.setAverage(studentDTO.getAverage());
         return studentRepository.save(student);
     }
+
 }
+
