@@ -1,5 +1,6 @@
 package tn.iit.myfirstspringapplication.services;
 
+import jakarta.persistence.Id;
 import org.springframework.stereotype.Service;
 import tn.iit.myfirstspringapplication.models.Student;
 import tn.iit.myfirstspringapplication.models.StudentSubject;
@@ -14,11 +15,13 @@ public class StudentSubjectService {
 
     private final StudentSubjectRepository subjectRepository;
     private final StudentRepository studentRepository;
+    private final StudentService studentService;
 
 
-    public StudentSubjectService(StudentSubjectRepository subjectRepository, StudentRepository studentRepository) {
+    public StudentSubjectService(StudentSubjectRepository subjectRepository, StudentRepository studentRepository, StudentService studentService) {
         this.subjectRepository = subjectRepository;
         this.studentRepository = studentRepository;
+        this.studentService = studentService;
     }
 
     public StudentSubject createSubject(Long studentId, StudentSubject subject){
@@ -41,6 +44,41 @@ public class StudentSubjectService {
             subjectRepository.deleteById(id);
         }
     }
+    public StudentSubject updateSubject(Long subjectId, StudentSubject updatedSubject) {
+        Optional<StudentSubject> existingSubjectOpt = subjectRepository.findById(subjectId);
+        if (existingSubjectOpt.isPresent()) {
+            StudentSubject existingSubject = existingSubjectOpt.get();
+            existingSubject.setName(updatedSubject.getName());
+            existingSubject.setMark(updatedSubject.getMark());
+
+            StudentSubject savedSubject = subjectRepository.save(existingSubject);
+            recalculateStudentAverage(savedSubject.getStudent());
+            return savedSubject;
+        } else {
+            return null;
+        }
+    }
+
+
+    private void recalculateStudentAverage(Student student) {
+        List<StudentSubject> subjects = getAllSubjects(); // FIXED
+
+        if (!subjects.isEmpty()) {
+            double totalWeightedMarks = subjects.stream()
+                    .mapToDouble(s -> s.getMark() * s.getCoefficient())
+                    .sum();
+
+            double totalCoefficients = subjects.stream()
+                    .mapToDouble(StudentSubject::getCoefficient)
+                    .sum();
+
+            double average = totalCoefficients != 0 ? totalWeightedMarks / totalCoefficients : 0.0;
+
+            student.setAverage(average);
+            studentRepository.save(student);
+        }
+    }
+
 }
 
 

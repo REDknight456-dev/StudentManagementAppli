@@ -29,6 +29,10 @@ public class SubjectController {
     public void deleteSubject(@PathVariable Long id) {
         studentSubjectService.deleteSubjectById(id);
     }
+    @PutMapping("/{subjectId}")
+    public StudentSubject updateStudentSubject(@PathVariable Long subjectId, @RequestBody StudentSubject subject) {
+        return studentSubjectService.updateSubject(subjectId, subject);
+    }
 
 }
 
