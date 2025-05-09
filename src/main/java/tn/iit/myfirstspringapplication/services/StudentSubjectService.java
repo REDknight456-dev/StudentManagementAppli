@@ -36,4 +36,12 @@ public class StudentSubjectService {
         return subjectRepository.findAll();
     }
 
+    public void deleteSubjectById(Long id) {
+        if (subjectRepository.existsById(id)) {
+            subjectRepository.deleteById(id);
+        }
+    }
 }
+
+
+
